@@ -10,6 +10,9 @@ module.exports = {
         },
         "main-background": {
           DEFAULT: "#eceff1"
+        },
+        "main-text-color": {
+          DEFAULT: "var(--main-text-color)"
         }
       }
     }
