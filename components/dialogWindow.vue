@@ -1,10 +1,10 @@
 <template>
-  <div class="modal-overlay overflow-auto">
+  <div
+    class="modal-overlay flex flex-col justify-start items-center overflow-auto"
+  >
     <div class="modal bg-opacity-50">
-      <h6>{{ title }}</h6>
-
       <div class="flex min-h-full flex-col justify-between">
-        <div class="border-b border-solid">
+        <div class="mb-12">
           <slot name="body" />
         </div>
 
@@ -28,14 +28,7 @@
 
 
 <script>
-export default {
-  props: {
-    title: {
-      type: String,
-      default: null,
-    },
-  },
-};
+export default {};
 </script>
 
 
@@ -77,6 +70,6 @@ export default {
 }
 
 .dialog-title {
-  @apply text-3xl sm:text-4xl mb-4 mt-6 font-bold;
+  @apply text-3xl sm:text-4xl my-8 font-bold border-b border-solid pb-8;
 }
 </style>
