@@ -18,9 +18,7 @@
           <template #body>
             <h6 class="dialog-title">Intervall hinzufügen</h6>
             <div>
-              <input class="base-input" type="number" min="0" max="99" />
-              <span class="font-bold">:</span>
-              <input class="base-input" type="number" min="0" max="59" />
+              <!-- TODO add inputs here -->
             </div>
             {{ newInterval }}
           </template>
@@ -129,13 +127,6 @@ export default {
 
 #timer-app button.disabled {
   @apply bg-opacity-20 cursor-not-allowed text-gray-200;
-}
-
-#timer-app .base-input {
-  @apply border border-solid outline-none rounded-md border-separate bg-gray-200 shadow-sm;
-}
-#timer-app .base-input:focus {
-  @apply border-blue-500 border-2;
 }
 </style>
 
