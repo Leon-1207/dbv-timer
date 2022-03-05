@@ -8,17 +8,39 @@
       :intervals="intervals"
       @add-interval="openAddIntervalDialog"
       @start-training="startTraining"
+      @edit-interval="openEditDialog"
+      @delete-interval="openDeleteDialog"
     />
 
     <timer-page v-show="!setupMode" ref="timerPage" />
 
     <!-- add interval -->
     <transition name="fade">
-      <div v-if="showAddIntervalDialog" class="contents">
+      <div
+        v-if="
+          showAddIntervalDialog ||
+          showEditIntervalDialog ||
+          showDeleteIntervalDialog
+        "
+        class="contents"
+      >
         <dialog-window>
           <template #body>
-            <h6 class="dialog-title">Intervall hinzufügen</h6>
-            <div class="grid gap-4">
+            <h6 v-if="showAddIntervalDialog" class="dialog-title">
+              Intervall hinzufügen
+            </h6>
+            <h6 v-else-if="showEditIntervalDialog" class="dialog-title">
+              Intervall bearbeiten
+            </h6>
+            <h6 v-else class="dialog-title">Intervall löschen</h6>
+
+            <!-- delete -->
+            <div v-if="showDeleteIntervalDialog">
+              <span> Möchtest du wirklich dieses Intervall löschen? </span>
+            </div>
+
+            <!-- add or edit -->
+            <div v-else class="grid gap-4">
               <div>
                 <p class="time-input-label">WIEDERHOLUNGEN</p>
 
@@ -96,7 +118,9 @@
               </div>
             </div>
           </template>
-          <template #bottom>
+
+          <!-- add new interval -->
+          <template v-if="showAddIntervalDialog" #bottom>
             <button
               class="text-red-500 hover:text-red-300"
               @click="showAddIntervalDialog = false"
@@ -111,6 +135,41 @@
               @click="clickedOnAddIntervalInDialog"
             >
               Hinzufügen
+            </button>
+          </template>
+
+          <!-- edit interval -->
+          <template v-else-if="showEditIntervalDialog" #bottom>
+            <button
+              class="text-red-500 hover:text-red-300"
+              @click="clickedOnAbortEdit"
+            >
+              Abbrechen
+            </button>
+            <button
+              class="text-blue-500"
+              :class="
+                isNewIntervalInputValid ? 'hover:text-blue-300' : 'disabled'
+              "
+              @click="clickedOnApplyEdit"
+            >
+              Okay
+            </button>
+          </template>
+
+          <!-- delete interval -->
+          <template v-else #bottom>
+            <button
+              class="text-blue-500 hover:text-blue-300"
+              @click="showDeleteIntervalDialog = false"
+            >
+              Zurück
+            </button>
+            <button
+              class="text-red-500 hover:text-red-300"
+              @click="confirmDeletion"
+            >
+              Löschen
             </button>
           </template>
         </dialog-window>
@@ -140,6 +199,8 @@ export default {
     return {
       setupMode: true,
       showAddIntervalDialog: false,
+      showEditIntervalDialog: false,
+      showDeleteIntervalDialog: false,
       newInterval: null,
       newIntervalTime: 0,
       intervals: [
@@ -149,6 +210,9 @@ export default {
           repetitions: 5,
         },
       ],
+      editIntervalCopy: null,
+      editIntervalIndex: null,
+      deleteIntervalIndex: null,
     };
   },
 
@@ -168,6 +232,46 @@ export default {
   },
 
   methods: {
+    openEditDialog(intervalIndex) {
+      const interval = this.intervals[intervalIndex];
+      this.newInterval = JSON.parse(JSON.stringify(interval));
+      this.editIntervalIndex = intervalIndex;
+      this.showEditIntervalDialog = true;
+    },
+    openDeleteDialog(intervalIndex) {
+      this.showDeleteIntervalDialog = true;
+      this.deleteIntervalIndex = intervalIndex;
+    },
+    confirmDeletion() {
+      try {
+        this.deleteInterval(this.deleteIntervalIndex);
+      } catch (error) {}
+      this.deleteIntervalIndex = null;
+      this.showDeleteIntervalDialog = false;
+    },
+    clickedOnApplyEdit() {
+      if (!this.isNewIntervalInputValid) return null;
+
+      // delete old interval
+      if (this.editIntervalIndex !== null)
+        this.deleteInterval(this.editIntervalIndex);
+
+      // add new
+      this.addIntervalObject(this.newInterval);
+
+      // close dialog
+      this.showEditIntervalDialog = false;
+    },
+    clickedOnAbortEdit() {
+      this.showEditIntervalDialog = false;
+      this.editIntervalCopy = null;
+      this.editIntervalIndex = null;
+    },
+    deleteInterval(intervalIndex) {
+      if (intervalIndex > -1) {
+        this.intervals.splice(intervalIndex, 1); // 2nd parameter means remove one item only
+      }
+    },
     sortIntervals() {
       const compareIntervals = (intervalA, intervalB) => {
         const timeA = convertIntervalTimeToSeconds(intervalA.workTime);
@@ -177,13 +281,16 @@ export default {
 
       this.intervals.sort(compareIntervals);
     },
-    openAddIntervalDialog() {
+    resetNewInterval() {
       this.newIntervalTime = 0;
       this.newInterval = {
         workTime: { minutes: 0, seconds: 0 },
         restTime: { minutes: 0, seconds: 0 },
         repetitions: 1,
       };
+    },
+    openAddIntervalDialog() {
+      this.resetNewInterval();
       this.showAddIntervalDialog = true;
     },
     clickedOnAddIntervalInDialog() {
@@ -195,6 +302,7 @@ export default {
       this.addIntervalObject(
         convertAllIntervalStringValuesToNumbers(this.newInterval)
       );
+      this.resetNewInterval();
 
       // close dialog
       this.showAddIntervalDialog = false;

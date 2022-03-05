@@ -1,6 +1,14 @@
 <template>
   <div
-    class="w-full p-4 rounded-xl bg-white border border-solid grid grid-cols-4 shadow-md"
+    class="
+      w-full
+      p-4
+      rounded-xl
+      bg-white
+      border border-solid
+      grid grid-cols-4
+      shadow-md
+    "
   >
     <div class="entry text-work">
       <span>Training</span>
@@ -20,12 +28,18 @@
     <!-- buttons -->
     <div class="my-auto grid gap-3 sm:gap-5 grid-flow-col ml-auto">
       <!-- edit button -->
-      <button class="circle-btn interval-btn edit">
+      <button
+        class="circle-btn interval-btn edit"
+        @click="$emit('edit-interval')"
+      >
         <font-awesome-icon icon="pen" />
       </button>
 
       <!-- delete button -->
-      <button class="circle-btn interval-btn delete">
+      <button
+        class="circle-btn interval-btn delete"
+        @click="$emit('delete-interval')"
+      >
         <font-awesome-icon icon="trash" />
       </button>
     </div>
@@ -38,12 +52,15 @@ import timeText from "./timeText.vue";
 
 export default {
   components: { timeText },
+
   props: {
     interval: {
       type: Object,
       required: true,
     },
   },
+
+  emits: ["edit-interval", "delete-interval"],
 };
 </script>
 

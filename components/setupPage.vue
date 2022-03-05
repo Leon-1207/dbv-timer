@@ -22,6 +22,8 @@
             v-for="(interval, index) in intervals"
             :key="index"
             :interval="interval"
+            @edit-interval="$emit('edit-interval', index)"
+            @delete-interval="$emit('delete-interval', index)"
           />
         </div>
 
@@ -97,7 +99,7 @@ export default {
     },
   },
 
-  emits: ["add-interval", "start-training"],
+  emits: ["add-interval", "start-training", "edit-interval", "delete-interval"],
 
   computed: {
     hasIntervals() {
@@ -116,7 +118,7 @@ export default {
   @apply text-white;
 }
 
-#setup-page .page-bottom-wrapper  {
+#setup-page .page-bottom-wrapper {
   @apply mt-20;
 }
 </style>
