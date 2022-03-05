@@ -8,7 +8,7 @@
 export default {
   props: {
     intervals: {
-      type: Object,
+      type: Array,
       required: true,
     },
   },

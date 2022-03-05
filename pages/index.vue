@@ -5,6 +5,7 @@
   >
     <setup-page
       v-show="setupMode"
+      :intervals="intervals"
       @add-interval="openAddIntervalDialog"
       @start-training="startTraining"
     />
@@ -20,7 +21,7 @@
             <div class="grid gap-4">
               <div>
                 <p class="time-input-label">WIEDERHOLUNGEN</p>
-                <!-- TODO add minus button -->
+
                 <div class="time-input-wrapper">
                   <input
                     v-model="newInterval.repetitions"
@@ -32,13 +33,11 @@
                     {{ newInterval.repetitions }}
                   </span>
                 </div>
-                <!-- TODO add plus button -->
               </div>
 
               <div>
                 <p class="time-input-label">TRAINING</p>
                 <div class="flex justify-center">
-                  <!-- TODO add minus button -->
                   <div class="time-input-wrapper">
                     <input
                       v-model="newInterval.workTime.minutes"
@@ -63,14 +62,12 @@
                       {{ addZeroPaddingToNumber(newInterval.workTime.seconds) }}
                     </span>
                   </div>
-                  <!-- TODO add plus button -->
                 </div>
               </div>
 
               <div>
                 <p class="time-input-label">PAUSE</p>
                 <div class="flex justify-center">
-                  <!-- TODO add minus button -->
                   <div class="time-input-wrapper">
                     <input
                       v-model="newInterval.restTime.minutes"
@@ -95,7 +92,6 @@
                       {{ addZeroPaddingToNumber(newInterval.restTime.seconds) }}
                     </span>
                   </div>
-                  <!-- TODO add plus button -->
                 </div>
               </div>
             </div>
@@ -125,7 +121,11 @@
 
 
 <script>
-import { getTotalTimeOfInterval } from "~/static/intervals";
+import {
+  convertAllIntervalStringValuesToNumbers,
+  convertSecondsToTimeObject,
+  getTotalTimeOfInterval,
+} from "~/static/intervals";
 import DialogWindow from "~/components/dialogWindow.vue";
 import setupPage from "~/components/setupPage.vue";
 import TimerPage from "~/components/timerPage.vue";
@@ -141,7 +141,7 @@ export default {
       showAddIntervalDialog: false,
       newInterval: null,
       newIntervalTime: 0,
-      intervals: {},
+      intervals: [],
     };
   },
 
@@ -171,15 +171,36 @@ export default {
       this.showAddIntervalDialog = true;
     },
     clickedOnAddIntervalInDialog() {
-      if (!this.isNewIntervalInputValid) this.addNewIntervalAndCloseDialog();
+      if (this.isNewIntervalInputValid) this.addNewIntervalAndCloseDialog();
       // else do nothing
     },
     addNewIntervalAndCloseDialog() {
       // add interval
-      // TODO
+      this.addIntervalObject(
+        convertAllIntervalStringValuesToNumbers(this.newInterval)
+      );
 
       // close dialog
       this.showAddIntervalDialog = false;
+    },
+    addInterval(workTimeInSeconds, restTimeInSeconds, repetitions) {
+      const valuesAreNumbers = [
+        workTimeInSeconds,
+        restTimeInSeconds,
+        repetitions,
+      ].every((value) => typeof value === "number");
+      if (!valuesAreNumbers) return null;
+
+      const workTime = convertSecondsToTimeObject(workTimeInSeconds);
+      const restTime = convertSecondsToTimeObject(restTimeInSeconds);
+
+      const interval = {
+        repetitions,
+        workTime,
+        restTime,
+      };
+
+      this.addIntervalObject(interval);
     },
     addZeroPaddingToNumber(inputNumber) {
       let str = String(inputNumber || 0) || "0";
@@ -197,18 +218,11 @@ export default {
         inputTime.seconds = seconds % 60;
       }
     },
-    addInterval(inputInterval) {
+    addIntervalObject(inputInterval) {
       if (typeof inputInterval !== "object") return null;
 
-      // get key for new interval
-      let keyNum = 0;
-      while (String(keyNum) in this.intervals) {
-        keyNum += 1;
-      }
-      const key = String(keyNum);
-
       // add data
-      this.intervals[key] = inputInterval;
+      this.intervals.push(inputInterval);
     },
     startTraining() {
       this.setupMode = false;
@@ -241,6 +255,26 @@ export default {
   @apply bg-opacity-20 cursor-not-allowed text-gray-200;
 }
 
+.interval-btn {
+  @apply w-5 h-5 bg-theme-light hover:bg-theme border border-solid rounded-full text-white text-xl font-semibold flex justify-center items-center my-auto relative;
+}
+.interval-btn.plus::before,
+.interval-btn.minus::before {
+  color: white;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  line-height: 13px;
+}
+.interval-btn.plus::before {
+  content: "+";
+}
+.interval-btn.minus::before {
+  content: "-";
+}
 .time-input-label {
   @apply text-lg text-theme;
 }

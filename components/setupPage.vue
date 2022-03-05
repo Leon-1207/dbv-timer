@@ -16,8 +16,17 @@
       </div>
 
       <!--- list -->
-      <div class="grid gap-2">
-        <setup-page-interval v-for="interval in intervals" :key="interval.id" />
+      <div>
+        <!-- TODO remove this -->
+        {{ intervals }}
+
+        <div class="grid gap-2">
+          <setup-page-interval
+            v-for="(interval, index) in intervals"
+            :key="index"
+          />
+        </div>
+
         <div v-if="!hasIntervals" class="info-box">
           <span class="font-semibold"
             >Du hast noch kein Intervall zum Training hinzufügt</span
@@ -64,10 +73,8 @@ export default {
 
   props: {
     intervals: {
-      type: Object,
-      default: () => {
-        return {};
-      },
+      type: Array,
+      required: true,
     },
   },
 
@@ -75,7 +82,7 @@ export default {
 
   computed: {
     hasIntervals() {
-      return Object.values(this.intervals).length > 0;
+      return this.intervals.length > 0;
     },
   },
 };
