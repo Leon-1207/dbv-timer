@@ -1,11 +1,20 @@
 <template>
-  <div>
-    <span>Gesamtdauer: {{ totalDuration }}</span>
+  <div class="text-xl grid">
+    <span class="mr-2">Gesamtdauer</span>
+    <time-text class="font-semibold" :data="timeObject" />
   </div>
 </template>
 
+
 <script>
+import {
+  convertSecondsToTimeObject,
+  getTotalTimeOfInterval,
+} from "~/static/intervals";
+import timeText from "~/components/timeText.vue";
+
 export default {
+  components: { timeText },
   props: {
     intervals: {
       type: Array,
@@ -14,8 +23,16 @@ export default {
   },
 
   computed: {
-    totalDuration() {
-      return "TODO";
+    totalSeconds() {
+      let result = 0;
+      this.intervals.forEach((interval) => {
+        const intervalSeconds = getTotalTimeOfInterval(interval);
+        result += intervalSeconds;
+      });
+      return result;
+    },
+    timeObject() {
+      return convertSecondsToTimeObject(this.totalSeconds);
     },
   },
 };
