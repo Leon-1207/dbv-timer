@@ -2,7 +2,7 @@
   <div
     class="modal-overlay flex flex-col justify-start items-center overflow-auto"
   >
-    <div class="modal bg-opacity-50">
+    <div class="modal bg-opacity-50  overflow-hidden">
       <div class="flex min-h-full flex-col justify-between">
         <div class="mb-12">
           <slot name="body" />
@@ -70,6 +70,6 @@ export default {};
 }
 
 .dialog-title {
-  @apply text-3xl sm:text-4xl my-8 font-bold border-b border-solid pb-8;
+  @apply text-3xl sm:text-4xl font-bold text-white mb-8 -mx-5 py-8 bg-gradient-to-tl from-theme to-theme-gradient;
 }
 </style>

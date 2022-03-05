@@ -1,33 +1,82 @@
 <template>
-  <div>
-    <div>
+  <div
+    id="setup-page"
+    class="
+      content-wrapper
+      relative
+      min-h-screen
+      flex flex-col
+      justify-between
+      px-6
+    "
+  >
+    <div class="w-full">
+      <div class="page-top-wrapper mb-10">
+        <h2 class="page-title">Intervalle bearbeiten</h2>
+      </div>
+
       <!--- list -->
       <div class="grid gap-2">
         <setup-page-interval v-for="interval in intervals" :key="interval.id" />
+        <div v-if="!hasIntervals" class="info-box">
+          <span class="font-semibold"
+            >Du hast noch kein Intervall zum Training hinzufügt</span
+          >
+          <br />
+          <span
+            class="text-blue-500 hover:text-blue-300 underline cursor-pointer"
+            @click="$emit('add-interval')"
+            >Intervall hinzufügen</span
+          >
+        </div>
       </div>
 
       <!-- add button -->
-      <button class="circle-btn">
-        <font-awesome-icon icon="plus" @click="$emit('add-interval')" />
-      </button>
+      <div class="w-full flex items-center my-6">
+        <button
+          class="
+            circle-btn
+            text-4xl
+            w-14
+            h-14
+            text-theme
+            hover:text-theme-light
+            mx-auto
+          "
+        >
+          <font-awesome-icon icon="plus" @click="$emit('add-interval')" />
+        </button>
+      </div>
     </div>
 
-    <!-- start button -->
-    <button @click="$emit('start-training')">START</button>
+    <!-- bottom (duration + start) -->
+    <div class="page-bottom-wrapper">
+      <setup-page-training-data :intervals="intervals" />
+      <button @click="$emit('start-training')">START</button>
+    </div>
   </div>
 </template>
 
 <script>
+import setupPageTrainingData from "./setupPageTrainingData.vue";
 export default {
+  components: { setupPageTrainingData },
+
   props: {
     intervals: {
-      type: Array,
+      type: Object,
       default: () => {
-        return [];
+        return {};
       },
     },
   },
 
   emits: ["add-interval", "start-training"],
+
+  computed: {
+    hasIntervals() {
+      return Object.values(this.intervals).length > 0;
+    },
+  },
 };
 </script>

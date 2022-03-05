@@ -19,20 +19,24 @@
             <h6 class="dialog-title">Intervall hinzufügen</h6>
             <div class="grid gap-4">
               <div>
-                <p>WIEDERHOLUNGEN</p>
+                <p class="time-input-label">WIEDERHOLUNGEN</p>
                 <!-- TODO add minus button -->
-                <input
-                  v-model="newInterval.repetitions"
-                  class="time-input"
-                  type="number"
-                  min="0"
-                  max="999"
-                />
+                <div class="time-input-wrapper">
+                  <input
+                    v-model="newInterval.repetitions"
+                    type="number"
+                    min="1"
+                    max="99"
+                  />
+                  <span>
+                    {{ newInterval.repetitions }}
+                  </span>
+                </div>
                 <!-- TODO add plus button -->
               </div>
 
               <div>
-                <p>TRAINING</p>
+                <p class="time-input-label">TRAINING</p>
                 <div class="flex justify-center">
                   <!-- TODO add minus button -->
                   <div class="time-input-wrapper">
@@ -64,7 +68,7 @@
               </div>
 
               <div>
-                <p>PAUSE</p>
+                <p class="time-input-label">PAUSE</p>
                 <div class="flex justify-center">
                   <!-- TODO add minus button -->
                   <div class="time-input-wrapper">
@@ -95,8 +99,6 @@
                 </div>
               </div>
             </div>
-
-            <div class="mt-5">{{ newInterval }}</div>
           </template>
           <template #bottom>
             <button
@@ -121,10 +123,13 @@
   </div>
 </template>
 
+
 <script>
+import { getTotalTimeOfInterval } from "~/static/intervals";
 import DialogWindow from "~/components/dialogWindow.vue";
 import setupPage from "~/components/setupPage.vue";
 import TimerPage from "~/components/timerPage.vue";
+
 export default {
   name: "IndexPage",
 
@@ -135,18 +140,29 @@ export default {
       setupMode: true,
       showAddIntervalDialog: false,
       newInterval: null,
+      newIntervalTime: 0,
       intervals: {},
     };
   },
 
   computed: {
     isNewIntervalInputValid() {
-      return true;
+      return this.newIntervalTime > 0;
+    },
+  },
+
+  watch: {
+    newInterval: {
+      deep: true,
+      handler() {
+        this.newIntervalTime = getTotalTimeOfInterval(this.newInterval);
+      },
     },
   },
 
   methods: {
     openAddIntervalDialog() {
+      this.newIntervalTime = 0;
       this.newInterval = {
         workTime: { minutes: 0, seconds: 0 },
         restTime: { minutes: 0, seconds: 0 },
@@ -206,7 +222,7 @@ export default {
 
 <style lang="postcss">
 .circle-btn {
-  @apply border border-solid bg-white rounded-full w-8 h-8;
+  @apply border border-solid bg-white rounded-full;
 }
 
 #timer-app {
@@ -225,17 +241,23 @@ export default {
   @apply bg-opacity-20 cursor-not-allowed text-gray-200;
 }
 
+.time-input-label {
+  @apply text-lg text-theme;
+}
 .time-input-wrapper {
   @apply relative;
 }
 .time-input-wrapper > input {
-  @apply outline-none text-transparent w-8 select-none;
+  @apply outline-none text-transparent w-8 select-none text-lg border-b-2 border-solid border-transparent;
 }
 .time-input-wrapper > input:focus {
-  @apply border-b-2 border-solid border-gray-200;
+  @apply border-theme-light;
+}
+.time-input-wrapper > input:focus + span {
+  @apply text-theme-light;
 }
 .time-input-wrapper > span {
-  @apply absolute top-0 left-0 bottom-0 right-0 pointer-events-none z-10 text-main-text-color;
+  @apply absolute top-0 left-0 bottom-0 right-0 pointer-events-none z-10 text-main-text-color text-lg;
 }
 .time-input-wrapper > input::-webkit-outer-spin-button,
 .time-input-wrapper > input::-webkit-inner-spin-button {
@@ -245,6 +267,37 @@ export default {
 /* Firefox */
 .time-input-wrapper > input[type="number"] {
   -moz-appearance: textfield;
+}
+
+.content-wrapper {
+  @apply max-w-4xl mx-auto;
+}
+
+.page-title {
+  @apply text-4xl text-center w-full text-theme;
+}
+
+.info-box {
+  @apply text-gray-400 border-l-4 border-solid border-theme bg-theme-very-light p-4;
+}
+
+.page-top-wrapper {
+  @apply rounded-b-lg;
+}
+.page-bottom-wrapper {
+  @apply rounded-t-lg;
+}
+.page-top-wrapper,
+.page-bottom-wrapper {
+  @apply bg-white
+        w-full
+        px-4
+        sm:px-8
+        py-6
+        border border-solid
+        flex
+        gap-4
+        justify-between;
 }
 </style>
 
