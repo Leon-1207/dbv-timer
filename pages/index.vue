@@ -299,13 +299,13 @@ export default {
   @apply relative;
 }
 .time-input-wrapper > input {
-  @apply outline-none text-transparent w-8 select-none text-lg border-b-2 border-solid border-transparent;
+  @apply outline-none text-transparent w-8 select-none text-lg border-b-2 border-solid border-transparent text-center;
 }
 .time-input-wrapper > input:focus {
-  @apply border-theme-light;
+  @apply border-theme-light text-theme-light;
 }
 .time-input-wrapper > input:focus + span {
-  @apply text-theme-light;
+  @apply text-theme-light hidden;
 }
 .time-input-wrapper > span {
   @apply absolute top-0 left-0 bottom-0 right-0 pointer-events-none z-10 text-main-text-color text-lg;
