@@ -58,8 +58,28 @@
 
     <!-- bottom (duration + start) -->
     <div class="page-bottom-wrapper">
+      <!-- start button -->
+      <button
+        class="
+          py-2
+          px-10
+          rounded-full
+          bg-gradient-to-br
+          from-theme
+          to-theme-gradient
+          text-white text-xl
+          flex flex-nowrap
+          justify-center
+          items-center
+        "
+        @click="$emit('start-training')"
+      >
+        <font-awesome-icon icon="bolt" />
+        <span class="ml-2.5">START</span>
+      </button>
+
+      <!-- duration -->
       <setup-page-training-data :intervals="intervals" />
-      <button @click="$emit('start-training')">START</button>
     </div>
   </div>
 </template>

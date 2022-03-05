@@ -333,10 +333,10 @@ export default {
 }
 
 .page-top-wrapper {
-  @apply rounded-b-lg;
+  @apply rounded-b-2xl;
 }
 .page-bottom-wrapper {
-  @apply rounded-t-lg;
+  @apply rounded-t-2xl;
 }
 .page-top-wrapper,
 .page-bottom-wrapper {
