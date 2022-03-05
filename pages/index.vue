@@ -123,6 +123,7 @@
 <script>
 import {
   convertAllIntervalStringValuesToNumbers,
+  convertIntervalTimeToSeconds,
   convertSecondsToTimeObject,
   getTotalTimeOfInterval,
 } from "~/static/intervals";
@@ -167,6 +168,15 @@ export default {
   },
 
   methods: {
+    sortIntervals() {
+      const compareIntervals = (intervalA, intervalB) => {
+        const timeA = convertIntervalTimeToSeconds(intervalA.workTime);
+        const timeB = convertIntervalTimeToSeconds(intervalB.workTime);
+        return timeA - timeB;
+      };
+
+      this.intervals.sort(compareIntervals);
+    },
     openAddIntervalDialog() {
       this.newIntervalTime = 0;
       this.newInterval = {
@@ -229,6 +239,7 @@ export default {
 
       // add data
       this.intervals.push(inputInterval);
+      this.sortIntervals(); // sort array after work time
     },
     startTraining() {
       this.setupMode = false;

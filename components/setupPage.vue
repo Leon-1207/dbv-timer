@@ -66,6 +66,7 @@
 
 <script>
 import setupPageTrainingData from "./setupPageTrainingData.vue";
+
 export default {
   components: { setupPageTrainingData },
 
