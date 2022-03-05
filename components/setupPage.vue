@@ -17,13 +17,11 @@
 
       <!--- list -->
       <div>
-        <!-- TODO remove this -->
-        {{ intervals }}
-
         <div class="grid gap-2">
           <setup-page-interval
             v-for="(interval, index) in intervals"
             :key="index"
+            :interval="interval"
           />
         </div>
 

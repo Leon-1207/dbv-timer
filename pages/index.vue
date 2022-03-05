@@ -141,7 +141,13 @@ export default {
       showAddIntervalDialog: false,
       newInterval: null,
       newIntervalTime: 0,
-      intervals: [],
+      intervals: [
+        {
+          workTime: { minutes: 1, seconds: 30 },
+          restTime: { minutes: 0, seconds: 20 },
+          repetitions: 5,
+        },
+      ],
     };
   },
 
@@ -323,15 +329,7 @@ export default {
 }
 .page-top-wrapper,
 .page-bottom-wrapper {
-  @apply bg-white
-        w-full
-        px-4
-        sm:px-8
-        py-6
-        border border-solid
-        flex
-        gap-4
-        justify-between;
+  @apply bg-white shadow-lg w-full px-4 sm:px-8 py-6 border border-solid flex gap-4 justify-between;
 }
 </style>
 
