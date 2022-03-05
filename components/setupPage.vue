@@ -106,3 +106,17 @@ export default {
   },
 };
 </script>
+
+
+<style lang="postcss" scoped>
+#setup-page .page-top-wrapper {
+  @apply bg-gradient-to-br from-theme to-theme-gradient text-white;
+}
+#setup-page .page-top-wrapper > * {
+  @apply text-white;
+}
+
+#setup-page .page-bottom-wrapper  {
+  @apply mt-20;
+}
+</style>
