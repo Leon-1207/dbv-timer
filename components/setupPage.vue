@@ -112,7 +112,7 @@ export default {
 
 <style lang="postcss" scoped>
 #setup-page .page-top-wrapper {
-  @apply bg-gradient-to-br from-theme to-theme-gradient text-white;
+  @apply bg-gradient-to-br from-theme to-theme-gradient text-white border-none;
 }
 #setup-page .page-top-wrapper > * {
   @apply text-white;
