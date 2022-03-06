@@ -8,6 +8,14 @@
       <div class="min-h-screen pb-20">
         <!-- box with timer and control buttons -->
         <div class="timer-wrapper-box">
+          <!-- main progress indicator -->
+          <radial-progress-indicator
+            :interval-kind="currentIntervalKindValue"
+            :interval-progress="currentIntervalProgress"
+            :training-progress="totalTrainingProgress"
+          >
+          </radial-progress-indicator>
+
           <!-- data -->
           <div
             class="
@@ -141,6 +149,7 @@
 
 <script>
 import timeText from "./timeText.vue";
+import RadialProgressIndicator from "./radialProgressIndicator.vue";
 import {
   convertIntervalTimeToSeconds,
   convertSecondsToTimeObject,
@@ -148,7 +157,8 @@ import {
 } from "~/static/intervals";
 
 export default {
-  components: { timeText },
+  components: { timeText, RadialProgressIndicator },
+
   emits: ["exit-timer"],
 
   data() {
@@ -260,6 +270,25 @@ export default {
           return "bg-rest-very-light";
         default:
           return "";
+      }
+    },
+    currentIntervalProgress() {
+      try {
+        const currentIntervalDuration = this.currentIntervalObject.duration;
+        const currentIntervalTime =
+          this.currentTimeInSeconds - this.currentIntervalObject.startTime;
+        return currentIntervalTime / Math.max(1, currentIntervalDuration);
+      } catch (error) {
+        return 0;
+      }
+    },
+    totalTrainingProgress() {
+      try {
+        return (
+          this.currentTimeInSeconds / Math.max(1, this.totalTrainingDuration)
+        );
+      } catch (error) {
+        return 0;
       }
     },
   },
