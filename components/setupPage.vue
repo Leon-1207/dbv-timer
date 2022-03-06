@@ -45,8 +45,8 @@
         <button
           class="
             circle-btn
-            w-14
-            h-14
+            w-20
+            h-20
             text-theme
             hover:text-theme-light
             mx-auto
@@ -54,7 +54,7 @@
           "
         >
           <font-awesome-icon
-            style="font-size: 36px"
+            style="font-size: 50px"
             icon="plus"
             @click="$emit('add-interval')"
           />
