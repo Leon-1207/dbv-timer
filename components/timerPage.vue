@@ -366,6 +366,7 @@ export default {
       }, 1000);
     },
     exitTimer() {
+      this.showExitTrainingDialog = false;
       this.pauseTimer();
       this.$emit("exit-timer");
     },
