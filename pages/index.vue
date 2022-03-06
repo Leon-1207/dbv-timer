@@ -383,6 +383,10 @@ export default {
   color: var(--main-text-color);
 }
 
+#timer-app, #timer-app * {
+  box-sizing: border-box;
+}
+
 #timer-app button {
   outline: none;
 }
