@@ -9566,6 +9566,11 @@
   "resolved" "https://registry.npmjs.org/vue-no-ssr/-/vue-no-ssr-1.1.1.tgz"
   "version" "1.1.1"
 
+"vue-radial-progress@^0.3.2":
+  "integrity" "sha512-F4eA9IFqoY5ZPBJNsqIu3C8J6TQ/5aQxUOAy+6wjVOvK+ljjs/8g8gUpy5CE2/THDH68+avwqov3ibaG1AyZSQ=="
+  "resolved" "https://registry.npmjs.org/vue-radial-progress/-/vue-radial-progress-0.3.2.tgz"
+  "version" "0.3.2"
+
 "vue-router@^3.5.1":
   "integrity" "sha512-FUlILrW3DGitS2h+Xaw8aRNvGTwtuaxrRkNSHWTizOfLUie7wuYwezeZ50iflRn8YPV5kxmU2LQuu3nM/b3Zsg=="
   "resolved" "https://registry.npmjs.org/vue-router/-/vue-router-3.5.3.tgz"
