@@ -199,6 +199,13 @@ export default {
             });
           time += restTimeInSeconds;
         });
+
+        // remove last rest interval
+        if (newIntervals.length > 0) {
+          const lastInterval = newIntervals[newIntervals.length - 1];
+          if (lastInterval.kind === "r") newIntervals.pop();
+        }
+
         this.intervals = newIntervals;
 
         // start
