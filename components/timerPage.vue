@@ -14,6 +14,13 @@
             :interval-progress="currentIntervalProgress"
             :training-progress="totalTrainingProgress"
           >
+            <div class="grid gap-4">
+              <time-text
+                class="font-semibold text-6xl mx-auto"
+                :data="currentIntervalTimeLeftAsTimeObject"
+              />
+              <span class="mx-auto">{{ currentIntervalKindText }}</span>
+            </div>
           </radial-progress-indicator>
 
           <!-- data -->
