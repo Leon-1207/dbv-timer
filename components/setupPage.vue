@@ -12,7 +12,7 @@
   >
     <div class="w-full">
       <div class="page-top-wrapper mb-10">
-        <h2 class="page-title">Intervalle bearbeiten</h2>
+        <h2 class="page-title">Plane dein Training</h2>
       </div>
 
       <!--- list -->
