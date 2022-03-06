@@ -9,6 +9,7 @@
         <!-- box with timer and control buttons -->
         <div class="timer-wrapper-box">
           progress
+          {{ intervals }}
 
           <!-- control buttons -->
           <div
@@ -88,6 +89,7 @@
 
 
 <script>
+import { convertIntervalTimeToSeconds, shuffle } from "~/static/intervals";
 export default {
   emits: ["exit-timer"],
 
@@ -98,6 +100,7 @@ export default {
       showExitTrainingDialog: false,
       isWorkInterval: false,
       intervals: [], // in form of [{kind: 'w', duration: 120}, {kind: 'r', duration: 15}]
+      updateTickInterval: null,
     };
   },
 
@@ -133,9 +136,44 @@ export default {
       // update value of is work interval
     },
     startTraining(intervals) {
-      // TODO
+      if (Array.isArray(intervals)) {
+        const newIntervals = [];
+
+        // remove repetitions
+        const intervalsWithoutRepetitions = [];
+        intervals.forEach(({ workTime, restTime, repetitions }) => {
+          const newIntervalObject = { repetitions: 1, workTime, restTime };
+          for (let index = 0; index < repetitions; index++) {
+            intervalsWithoutRepetitions.push(newIntervalObject);
+          }
+        });
+
+        // shuffle input intervals
+        const intervalsInRandomOrder = shuffle(intervalsWithoutRepetitions);
+
+        // process interval data
+        intervalsInRandomOrder.forEach(({ restTime, workTime }) => {
+          const restTimeInSeconds = convertIntervalTimeToSeconds(restTime);
+          const workTimeInSeconds = convertIntervalTimeToSeconds(workTime);
+
+          if (workTimeInSeconds > 0)
+            newIntervals.push({ kind: "w", duration: workTimeInSeconds });
+          if (restTimeInSeconds > 0)
+            newIntervals.push({ kind: "r", duration: restTimeInSeconds });
+        });
+        this.intervals = newIntervals;
+
+        // start
+        this.resetAndStartTimer();
+      }
+    },
+    resetAndStartTimer() {
+      if (this.updateTickInterval) clearInterval(this.updateTickInterval);
       this.currentTimeInSeconds = 0;
       this.playing = true;
+      setTimeout(() => {
+        this.updateTickInterval = setInterval(this.updateTick, 1000);
+      }, 1000);
     },
     exitTimer() {
       this.playing = false;
