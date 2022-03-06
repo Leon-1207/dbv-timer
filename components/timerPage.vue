@@ -8,8 +8,7 @@
       <div class="min-h-screen pb-20">
         <!-- box with timer and control buttons -->
         <div class="timer-wrapper-box">
-          progress
-          {{ intervals }}
+          {{ currentTimeInSeconds }}
 
           <!-- control buttons -->
           <div
@@ -56,11 +55,16 @@
         </div>
 
         <!-- sticky timer box -->
-        <div class="timer-wrapper-box sticky top-2 sm:top-4" :class="computedTimerBgClass">TODO</div>
+        <div
+          class="timer-wrapper-box sticky top-2 sm:top-4"
+          :class="computedTimerBgClass"
+        >
+          TODO
+        </div>
       </div>
 
       <!-- box with timeline -->
-      <div class="timer-wrapper-box h-96">TODO</div>
+      <div class="timer-wrapper-box h-96">{{ intervals }}</div>
     </div>
 
     <!-- dialog window -->
@@ -109,8 +113,17 @@ export default {
 
   computed: {
     currentIntervalIndex() {
-      // TODO
-      return 0;
+      if (Array.isArray(this.intervals) && this.intervals.length > 0) {
+        let index = 0;
+        while (
+          index < this.intervals.length &&
+          this.intervals[index].startTime < this.currentTimeInSeconds
+        ) {
+          index += 1;
+        }
+        return Math.max(0, index - 1);
+      }
+      return null;
     },
     currentIntervalObject() {
       const index = this.currentIntervalIndex;
@@ -146,7 +159,8 @@ export default {
 
   methods: {
     updateTick() {
-      // update value of is work interval
+      if (!this.playing) return null; // is paused --> do not update
+      this.currentTimeInSeconds += 1;
     },
     startTraining(intervals) {
       if (Array.isArray(intervals)) {
@@ -165,14 +179,25 @@ export default {
         const intervalsInRandomOrder = shuffle(intervalsWithoutRepetitions);
 
         // process interval data
+        let time = 0;
         intervalsInRandomOrder.forEach(({ restTime, workTime }) => {
           const restTimeInSeconds = convertIntervalTimeToSeconds(restTime);
           const workTimeInSeconds = convertIntervalTimeToSeconds(workTime);
 
           if (workTimeInSeconds > 0)
-            newIntervals.push({ kind: "w", duration: workTimeInSeconds });
+            newIntervals.push({
+              kind: "w",
+              duration: workTimeInSeconds,
+              startTime: time,
+            });
+          time += workTimeInSeconds;
           if (restTimeInSeconds > 0)
-            newIntervals.push({ kind: "r", duration: restTimeInSeconds });
+            newIntervals.push({
+              kind: "r",
+              duration: restTimeInSeconds,
+              startTime: time,
+            });
+          time += restTimeInSeconds;
         });
         this.intervals = newIntervals;
 
@@ -189,7 +214,7 @@ export default {
       }, 1000);
     },
     exitTimer() {
-      this.playing = false;
+      this.pauseTimer();
       this.$emit("exit-timer");
     },
     pauseTimer() {
@@ -199,7 +224,12 @@ export default {
       this.playing = true;
     },
     skipTimerStep() {
-      // TODO
+      if (this.currentIntervalIndex === null) return null;
+      const nextIntervalIndex = this.currentIntervalIndex + 1;
+      if (this.intervals.length > nextIntervalIndex) {
+        const nextInterval = this.intervals[nextIntervalIndex];
+        this.currentTimeInSeconds = nextInterval.startTime;
+      }
     },
   },
 };
