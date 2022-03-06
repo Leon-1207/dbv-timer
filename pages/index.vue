@@ -207,7 +207,17 @@ export default {
         {
           workTime: { minutes: 1, seconds: 30 },
           restTime: { minutes: 0, seconds: 20 },
-          repetitions: 5,
+          repetitions: 3,
+        },
+        {
+          workTime: { minutes: 1, seconds: 0 },
+          restTime: { minutes: 0, seconds: 10 },
+          repetitions: 1,
+        },
+        {
+          workTime: { minutes: 2, seconds: 15 },
+          restTime: { minutes: 0, seconds: 30 },
+          repetitions: 4,
         },
       ],
       editIntervalCopy: null,
@@ -452,7 +462,7 @@ export default {
 }
 
 .hover-uplift {
-  @apply duration-75 transform hover:scale-105 hover:shadow-lg
+  @apply duration-75 transform hover:scale-105 hover:shadow-lg;
 }
 </style>
 
