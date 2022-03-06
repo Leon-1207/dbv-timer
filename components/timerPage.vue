@@ -8,9 +8,11 @@
       <div class="min-h-screen pb-20">
         <!-- box with timer and control buttons -->
         <div class="timer-wrapper-box">
+          <div class="h-12 w-full"></div>
+
           <!-- main progress indicator -->
           <radial-progress-indicator
-            :interval-kind="currentIntervalKindValue"
+            :interval-kind="currentIntervalKindValue || ''"
             :interval-progress="currentIntervalProgress"
             :training-progress="totalTrainingProgress"
           >
