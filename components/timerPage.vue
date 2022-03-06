@@ -1,7 +1,7 @@
 <template>
   <div
-    class="h-screen max-h-screen overflow-y-auto"
-    :class="computedTimerBgClass"
+    class="h-screen max-h-screen overflow-y-auto relative"
+    :class="computedTimerLightBgClass"
   >
     <div class="content-wrapper">
       <!-- screen height wrapper in order to hide progress -->
@@ -54,10 +54,13 @@
             </button>
           </div>
         </div>
+
+        <!-- sticky timer box -->
+        <div class="timer-wrapper-box sticky top-2 sm:top-4" :class="computedTimerBgClass">TODO</div>
       </div>
 
       <!-- box with timeline -->
-      <div class="timer-wrapper-box">TODO</div>
+      <div class="timer-wrapper-box h-96">TODO</div>
     </div>
 
     <!-- dialog window -->
@@ -125,6 +128,16 @@ export default {
           return "bg-gradient-to-br from-work to-work-gradient";
         case "r":
           return "bg-gradient-to-br from-rest to-rest-gradient";
+        default:
+          return "";
+      }
+    },
+    computedTimerLightBgClass() {
+      switch (this.currentIntervalKindVale) {
+        case "w":
+          return "bg-work-very-light";
+        case "r":
+          return "bg-rest-very-light";
         default:
           return "";
       }
@@ -206,6 +219,6 @@ export default {
 }
 
 .timer-wrapper-box {
-  @apply bg-main-background rounded-xl py-2 px-4 my-10;
+  @apply bg-main-background rounded-xl py-8 px-4 my-10 mx-5;
 }
 </style>

@@ -4,11 +4,13 @@ module.exports = {
       colors: {
         "work": {
           DEFAULT: "#DE781F",
-          gradient: "#de981f"
+          gradient: "#de981f",
+          "very-light": "#fffefd",
         },
         "rest": {
           DEFAULT: "#1F85DE",
-          gradient: "#1fa5de"
+          gradient: "#1fa5de",
+          "very-light": "#fdfeff",
         },
         "theme": {
           DEFAULT: "#1F85DE",
