@@ -242,6 +242,10 @@ export default {
     },
   },
 
+  mounted() {
+    this.loadUrlQuery();
+  },
+
   methods: {
     openEditDialog(intervalIndex) {
       const interval = this.intervals[intervalIndex];
@@ -282,6 +286,7 @@ export default {
       if (intervalIndex > -1) {
         this.intervals.splice(intervalIndex, 1); // 2nd parameter means remove one item only
       }
+      this.updateUrlQuery();
     },
     sortIntervals() {
       const compareIntervals = (intervalA, intervalB) => {
@@ -359,11 +364,43 @@ export default {
       // add data
       this.intervals.push(inputInterval);
       this.sortIntervals(); // sort array after work time
+      this.updateUrlQuery();
     },
     startTraining() {
       this.setupMode = false;
       const timerPageRef = this.$refs.timerPage;
       timerPageRef.startTraining(this.intervals);
+    },
+    updateUrlQuery() {
+      // get data
+      const intervalObjectToString = ({ repetitions, workTime, restTime }) => {
+        const workTimeInSeconds = convertIntervalTimeToSeconds(workTime);
+        const restTimeInSeconds = convertIntervalTimeToSeconds(restTime);
+        return [workTimeInSeconds, restTimeInSeconds, repetitions]
+          .map((value) => String(value))
+          .join("-");
+      };
+
+      const dataArray = (this.intervals || []).map(intervalObjectToString);
+      const data = dataArray.join("_");
+
+      // push route
+      this.$router.push({ query: { data } });
+    },
+    loadUrlQuery() {
+      try {
+        const data = this.$route.query?.data;
+        if (typeof data === "string" && data.length > 0) {
+          const convertStringIntervalToObject = (str) => {
+            const numbers = str.split("-").map((subStr) => Number(subStr));
+            const workTime = convertSecondsToTimeObject(numbers[0]);
+            const restTime = convertSecondsToTimeObject(numbers[1]);
+            const repetitions = numbers[2];
+            return { workTime, restTime, repetitions };
+          };
+          this.intervals = data.split("_").map(convertStringIntervalToObject);
+        }
+      } catch (error) {}
     },
   },
 };
@@ -383,7 +420,8 @@ export default {
   color: var(--main-text-color);
 }
 
-#timer-app, #timer-app * {
+#timer-app,
+#timer-app * {
   box-sizing: border-box;
 }
 
