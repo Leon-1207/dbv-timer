@@ -361,7 +361,7 @@ export default {
 
 <style lang="postcss">
 .circle-btn {
-  @apply border border-solid bg-white rounded-full;
+  @apply border border-solid bg-white rounded-full shadow;
 }
 
 #timer-app {
@@ -449,6 +449,10 @@ export default {
 .page-top-wrapper,
 .page-bottom-wrapper {
   @apply bg-white shadow-lg w-full px-4 sm:px-8 py-6 border border-solid flex gap-4 justify-between;
+}
+
+.hover-uplift {
+  @apply duration-75 transform hover:scale-105 hover:shadow-lg
 }
 </style>
 

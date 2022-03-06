@@ -29,7 +29,7 @@
     <div class="my-auto grid gap-3 sm:gap-5 grid-flow-col ml-auto">
       <!-- edit button -->
       <button
-        class="circle-btn interval-btn edit"
+        class="circle-btn interval-btn edit hover-uplift"
         @click="$emit('edit-interval')"
       >
         <font-awesome-icon icon="pen" />
@@ -37,7 +37,7 @@
 
       <!-- delete button -->
       <button
-        class="circle-btn interval-btn delete"
+        class="circle-btn interval-btn delete hover-uplift"
         @click="$emit('delete-interval')"
       >
         <font-awesome-icon icon="trash" />

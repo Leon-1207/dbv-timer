@@ -43,7 +43,15 @@
       <!-- add button -->
       <div class="w-full flex items-center my-6">
         <button
-          class="circle-btn w-14 h-14 text-theme hover:text-theme-light mx-auto"
+          class="
+            circle-btn
+            w-14
+            h-14
+            text-theme
+            hover:text-theme-light
+            mx-auto
+            hover-uplift
+          "
         >
           <font-awesome-icon
             style="font-size: 36px"
@@ -69,6 +77,8 @@
           flex flex-nowrap
           justify-center
           items-center
+          shadow-md
+          hover-uplift
         "
         @click="$emit('start-training')"
       >
