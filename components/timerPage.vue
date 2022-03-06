@@ -311,6 +311,6 @@ export default {
 }
 
 .timer-wrapper-box {
-  @apply bg-main-background rounded-xl py-8 px-4 my-10 mx-5;
+  @apply bg-main-background rounded-xl py-8 px-4 my-10 mx-5 shadow-lg;
 }
 </style>
