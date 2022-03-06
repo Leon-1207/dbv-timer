@@ -1,5 +1,5 @@
 <template>
-  <div class="text-xl grid">
+  <div class="grid">
     <span class="mr-2">Gesamtdauer</span>
     <time-text class="font-semibold" :data="timeObject" />
   </div>

@@ -63,17 +63,18 @@
     </div>
 
     <!-- bottom (duration + start) -->
-    <div class="page-bottom-wrapper">
+    <div class="page-bottom-wrapper text-lg sm:text-xl">
       <!-- start button -->
       <button
         class="
-          py-2
-          px-10
+          py-1
+          px-6
+          sm:py-2 sm:px-10
           rounded-full
           bg-gradient-to-br
           from-theme
           to-theme-gradient
-          text-white text-xl
+          text-white
           flex flex-nowrap
           justify-center
           items-center
