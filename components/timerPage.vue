@@ -130,13 +130,13 @@ export default {
       if (this.intervals.length > index) return this.intervals[index];
       return null;
     },
-    currentIntervalKindVale() {
+    currentIntervalKindValue() {
       const interval = this.currentIntervalObject;
       if (interval) return interval.kind;
       return null;
     },
     computedTimerBgClass() {
-      switch (this.currentIntervalKindVale) {
+      switch (this.currentIntervalKindValue) {
         case "w":
           return "bg-gradient-to-br from-work to-work-gradient";
         case "r":
@@ -146,7 +146,7 @@ export default {
       }
     },
     computedTimerLightBgClass() {
-      switch (this.currentIntervalKindVale) {
+      switch (this.currentIntervalKindValue) {
         case "w":
           return "bg-work-very-light";
         case "r":
