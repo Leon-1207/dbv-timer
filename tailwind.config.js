@@ -5,12 +5,12 @@ module.exports = {
         "work": {
           DEFAULT: "#DE781F",
           gradient: "#de981f",
-          "very-light": "#fffefd",
+          "very-light": "#fff4e9",
         },
         "rest": {
           DEFAULT: "#1F85DE",
           gradient: "#1fa5de",
-          "very-light": "#fdfeff",
+          "very-light": "#e9f4ff",
         },
         "theme": {
           DEFAULT: "#1F85DE",
@@ -19,7 +19,7 @@ module.exports = {
           "very-light": "#dbecfa",
         },
         "main-background": {
-          DEFAULT: "#eceff1"
+          DEFAULT: "#e5e7eb"  // "#eceff1"
         },
         "main-text-color": {
           DEFAULT: "var(--main-text-color)"

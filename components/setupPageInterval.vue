@@ -10,12 +10,12 @@
       shadow-md
     "
   >
-    <div class="entry text-work">
+    <div class="entry">
       <span>Training</span>
       <time-text :data="interval.workTime" />
     </div>
 
-    <div class="entry text-rest">
+    <div class="entry">
       <span>Pause</span>
       <time-text :data="interval.restTime" />
     </div>

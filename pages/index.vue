@@ -376,7 +376,7 @@ export default {
 }
 
 #timer-app {
-  --main-text-color: #424242;
+  --main-text-color: #4b5563; /* #424242; */
 }
 
 #timer-app {
