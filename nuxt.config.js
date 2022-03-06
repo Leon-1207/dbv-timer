@@ -24,10 +24,12 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    '@fortawesome/fontawesome-svg-core/styles.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '~/plugins/fontawesome.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -40,14 +42,16 @@ export default {
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
     // fontawesome
-    '@nuxtjs/fontawesome',
+    // '@nuxtjs/fontawesome',
   ],
 
+  /*
   fontawesome: {
     icons: {
       solid: true
     }
   },
+  */
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
