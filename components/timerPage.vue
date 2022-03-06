@@ -56,10 +56,31 @@
 
         <!-- sticky timer box -->
         <div
-          class="timer-wrapper-box sticky top-2 sm:top-4"
+          class="
+            timer-wrapper-box
+            sticky
+            top-2
+            sm:top-4
+            text-white text-xl
+            font-semibold
+            grid grid-cols-3
+          "
           :class="computedTimerBgClass"
         >
-          TODO
+          <span class="ml-2"> {{ currentIntervalKindText }}</span>
+          <time-text
+            class="mx-auto"
+            :data="currentIntervalTimeLeftAsTimeObject"
+          />
+          <div class="ml-auto text-white text-2xl mr-2">
+            <!-- pause / resume button -->
+            <button v-if="playing" @click="pauseTimer">
+              <font-awesome-icon icon="pause" />
+            </button>
+            <button v-else @click="resumeTimer">
+              <font-awesome-icon icon="play" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -96,8 +117,15 @@
 
 
 <script>
-import { convertIntervalTimeToSeconds, shuffle } from "~/static/intervals";
+import timeText from "./timeText.vue";
+import {
+  convertIntervalTimeToSeconds,
+  convertSecondsToTimeObject,
+  shuffle,
+} from "~/static/intervals";
+
 export default {
+  components: { timeText },
   emits: ["exit-timer"],
 
   data() {
@@ -135,12 +163,39 @@ export default {
       if (interval) return interval.kind;
       return null;
     },
-    computedTimerBgClass() {
+    currentIntervalKindText() {
+      if (!this.playing) return "PAUSIERT";
       switch (this.currentIntervalKindValue) {
         case "w":
-          return "bg-gradient-to-br from-work to-work-gradient";
+          return "TRAINING";
         case "r":
-          return "bg-gradient-to-br from-rest to-rest-gradient";
+          return "PAUSE";
+        default:
+          return "";
+      }
+    },
+    currentIntervalTimeLeftInSeconds() {
+      const interval = this.currentIntervalObject;
+      if (interval)
+        return Math.max(
+          0,
+          interval.startTime + interval.duration - this.currentTimeInSeconds
+        );
+      return null;
+    },
+    currentIntervalTimeLeftAsTimeObject() {
+      const seconds = this.currentIntervalTimeLeftInSeconds;
+      return convertSecondsToTimeObject(
+        typeof seconds === "number" ? seconds : 0
+      );
+    },
+    computedTimerBgClass() {
+      if (!this.playing) return "bg-gradient-to-br from-gray-600 to-gray-700";
+      switch (this.currentIntervalKindValue) {
+        case "w":
+          return "bg-gradient-to-tl from-work to-work-gradient";
+        case "r":
+          return "bg-gradient-to-tl from-rest to-rest-gradient";
         default:
           return "";
       }
