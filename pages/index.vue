@@ -12,168 +12,169 @@
       @delete-interval="openDeleteDialog"
     />
 
-    <timer-page v-show="!setupMode" ref="timerPage" />
+    <timer-page
+      v-show="!setupMode"
+      ref="timerPage"
+      @exit-timer="setupMode = true"
+    />
 
     <!-- add interval -->
     <transition name="fade">
-      <div
+      <dialog-window
         v-if="
           showAddIntervalDialog ||
           showEditIntervalDialog ||
           showDeleteIntervalDialog
         "
-        class="contents"
       >
-        <dialog-window>
-          <template #body>
-            <h6 v-if="showAddIntervalDialog" class="dialog-title">
-              Intervall hinzufügen
-            </h6>
-            <h6 v-else-if="showEditIntervalDialog" class="dialog-title">
-              Intervall bearbeiten
-            </h6>
-            <h6 v-else class="dialog-title">Intervall löschen</h6>
+        <template #body>
+          <h6 v-if="showAddIntervalDialog" class="dialog-title">
+            Intervall hinzufügen
+          </h6>
+          <h6 v-else-if="showEditIntervalDialog" class="dialog-title">
+            Intervall bearbeiten
+          </h6>
+          <h6 v-else class="dialog-title">Intervall löschen</h6>
 
-            <!-- delete -->
-            <div v-if="showDeleteIntervalDialog">
-              <span> Möchtest du wirklich dieses Intervall löschen? </span>
+          <!-- delete -->
+          <div v-if="showDeleteIntervalDialog">
+            <span> Möchtest du wirklich dieses Intervall löschen? </span>
+          </div>
+
+          <!-- add or edit -->
+          <div v-else class="grid gap-4">
+            <div>
+              <p class="time-input-label">WIEDERHOLUNGEN</p>
+
+              <div class="time-input-wrapper">
+                <input
+                  v-model="newInterval.repetitions"
+                  type="number"
+                  min="1"
+                  max="99"
+                />
+                <span>
+                  {{ newInterval.repetitions }}
+                </span>
+              </div>
             </div>
 
-            <!-- add or edit -->
-            <div v-else class="grid gap-4">
-              <div>
-                <p class="time-input-label">WIEDERHOLUNGEN</p>
-
+            <div>
+              <p class="time-input-label">TRAINING</p>
+              <div class="flex justify-center">
                 <div class="time-input-wrapper">
                   <input
-                    v-model="newInterval.repetitions"
+                    v-model="newInterval.workTime.minutes"
                     type="number"
-                    min="1"
+                    min="0"
                     max="99"
                   />
                   <span>
-                    {{ newInterval.repetitions }}
+                    {{ addZeroPaddingToNumber(newInterval.workTime.minutes) }}
+                  </span>
+                </div>
+                <span class="font-bold">:</span>
+                <div class="time-input-wrapper">
+                  <input
+                    v-model="newInterval.workTime.seconds"
+                    type="number"
+                    min="0"
+                    max="60"
+                    @input="updateTime(newInterval.workTime)"
+                  />
+                  <span>
+                    {{ addZeroPaddingToNumber(newInterval.workTime.seconds) }}
                   </span>
                 </div>
               </div>
+            </div>
 
-              <div>
-                <p class="time-input-label">TRAINING</p>
-                <div class="flex justify-center">
-                  <div class="time-input-wrapper">
-                    <input
-                      v-model="newInterval.workTime.minutes"
-                      type="number"
-                      min="0"
-                      max="99"
-                    />
-                    <span>
-                      {{ addZeroPaddingToNumber(newInterval.workTime.minutes) }}
-                    </span>
-                  </div>
-                  <span class="font-bold">:</span>
-                  <div class="time-input-wrapper">
-                    <input
-                      v-model="newInterval.workTime.seconds"
-                      type="number"
-                      min="0"
-                      max="60"
-                      @input="updateTime(newInterval.workTime)"
-                    />
-                    <span>
-                      {{ addZeroPaddingToNumber(newInterval.workTime.seconds) }}
-                    </span>
-                  </div>
+            <div>
+              <p class="time-input-label">PAUSE</p>
+              <div class="flex justify-center">
+                <div class="time-input-wrapper">
+                  <input
+                    v-model="newInterval.restTime.minutes"
+                    type="number"
+                    min="0"
+                    max="99"
+                  />
+                  <span>
+                    {{ addZeroPaddingToNumber(newInterval.restTime.minutes) }}
+                  </span>
                 </div>
-              </div>
-
-              <div>
-                <p class="time-input-label">PAUSE</p>
-                <div class="flex justify-center">
-                  <div class="time-input-wrapper">
-                    <input
-                      v-model="newInterval.restTime.minutes"
-                      type="number"
-                      min="0"
-                      max="99"
-                    />
-                    <span>
-                      {{ addZeroPaddingToNumber(newInterval.restTime.minutes) }}
-                    </span>
-                  </div>
-                  <span class="font-bold">:</span>
-                  <div class="time-input-wrapper">
-                    <input
-                      v-model="newInterval.restTime.seconds"
-                      type="number"
-                      min="0"
-                      max="60"
-                      @input="updateTime(newInterval.restTime)"
-                    />
-                    <span>
-                      {{ addZeroPaddingToNumber(newInterval.restTime.seconds) }}
-                    </span>
-                  </div>
+                <span class="font-bold">:</span>
+                <div class="time-input-wrapper">
+                  <input
+                    v-model="newInterval.restTime.seconds"
+                    type="number"
+                    min="0"
+                    max="60"
+                    @input="updateTime(newInterval.restTime)"
+                  />
+                  <span>
+                    {{ addZeroPaddingToNumber(newInterval.restTime.seconds) }}
+                  </span>
                 </div>
               </div>
             </div>
-          </template>
+          </div>
+        </template>
 
-          <!-- add new interval -->
-          <template v-if="showAddIntervalDialog" #bottom>
-            <button
-              class="text-red-500 hover:text-red-300"
-              @click="showAddIntervalDialog = false"
-            >
-              Abbrechen
-            </button>
-            <button
-              class="text-blue-500"
-              :class="
-                isNewIntervalInputValid ? 'hover:text-blue-300' : 'disabled'
-              "
-              @click="clickedOnAddIntervalInDialog"
-            >
-              Hinzufügen
-            </button>
-          </template>
+        <!-- add new interval -->
+        <template v-if="showAddIntervalDialog" #bottom>
+          <button
+            class="text-red-500 hover:text-red-300"
+            @click="showAddIntervalDialog = false"
+          >
+            Abbrechen
+          </button>
+          <button
+            class="text-blue-500"
+            :class="
+              isNewIntervalInputValid ? 'hover:text-blue-300' : 'disabled'
+            "
+            @click="clickedOnAddIntervalInDialog"
+          >
+            Hinzufügen
+          </button>
+        </template>
 
-          <!-- edit interval -->
-          <template v-else-if="showEditIntervalDialog" #bottom>
-            <button
-              class="text-red-500 hover:text-red-300"
-              @click="clickedOnAbortEdit"
-            >
-              Abbrechen
-            </button>
-            <button
-              class="text-blue-500"
-              :class="
-                isNewIntervalInputValid ? 'hover:text-blue-300' : 'disabled'
-              "
-              @click="clickedOnApplyEdit"
-            >
-              Okay
-            </button>
-          </template>
+        <!-- edit interval -->
+        <template v-else-if="showEditIntervalDialog" #bottom>
+          <button
+            class="text-red-500 hover:text-red-300"
+            @click="clickedOnAbortEdit"
+          >
+            Abbrechen
+          </button>
+          <button
+            class="text-blue-500"
+            :class="
+              isNewIntervalInputValid ? 'hover:text-blue-300' : 'disabled'
+            "
+            @click="clickedOnApplyEdit"
+          >
+            Okay
+          </button>
+        </template>
 
-          <!-- delete interval -->
-          <template v-else #bottom>
-            <button
-              class="text-blue-500 hover:text-blue-300"
-              @click="showDeleteIntervalDialog = false"
-            >
-              Zurück
-            </button>
-            <button
-              class="text-red-500 hover:text-red-300"
-              @click="confirmDeletion"
-            >
-              Löschen
-            </button>
-          </template>
-        </dialog-window>
-      </div>
+        <!-- delete interval -->
+        <template v-else #bottom>
+          <button
+            class="text-blue-500 hover:text-blue-300"
+            @click="showDeleteIntervalDialog = false"
+          >
+            Zurück
+          </button>
+          <button
+            class="text-red-500 hover:text-red-300"
+            @click="confirmDeletion"
+          >
+            Löschen
+          </button>
+        </template>
+      </dialog-window>
     </transition>
   </div>
 </template>
@@ -362,7 +363,7 @@ export default {
     startTraining() {
       this.setupMode = false;
       const timerPageRef = this.$refs.timerPage;
-      timerPageRef.startTraining();
+      timerPageRef.startTraining(this.intervals);
     },
   },
 };
