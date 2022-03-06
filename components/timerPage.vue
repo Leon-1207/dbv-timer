@@ -8,7 +8,30 @@
       <div class="min-h-screen pb-20">
         <!-- box with timer and control buttons -->
         <div class="timer-wrapper-box">
-          {{ currentTimeInSeconds }}
+          <!-- data -->
+          <div
+            class="
+              w-full
+              flex
+              justify-between
+              items-center
+              sm:text-lg
+              px-2
+              sm:px-8
+              pt-6
+              py-12
+              flex-wrap
+            "
+          >
+            <div class="whitespace-nowrap mr-2">
+              <span class="font-semibold">Verbleibende Zeit: </span>
+              <time-text :data="totalTimeLeftAsTimeObject" />
+            </div>
+            <div class="whitespace-nowrap">
+              <span class="font-semibold">Verbleibende Intervalle: </span>
+              <span>{{ remainingWorkSets }}</span>
+            </div>
+          </div>
 
           <!-- control buttons -->
           <div
@@ -188,6 +211,35 @@ export default {
       return convertSecondsToTimeObject(
         typeof seconds === "number" ? seconds : 0
       );
+    },
+    totalTrainingDuration() {
+      const arr = Array.isArray(this.intervals) ? this.intervals : [];
+      let result = 0;
+      arr.forEach((interval) => {
+        result += interval.duration;
+      });
+      return result;
+    },
+    totalTimeLeftInSeconds() {
+      return Math.max(
+        0,
+        this.totalTrainingDuration - this.currentTimeInSeconds
+      );
+    },
+    totalTimeLeftAsTimeObject() {
+      return convertSecondsToTimeObject(this.totalTimeLeftInSeconds);
+    },
+    remainingWorkSets() {
+      let result = 0;
+      for (
+        let index = this.currentIntervalIndex + 1;
+        index < this.intervals.length;
+        index++
+      ) {
+        const interval = this.intervals[index];
+        if (interval.kind === "w") result += 1;
+      }
+      return result;
     },
     computedTimerBgClass() {
       if (!this.playing) return "bg-gradient-to-br from-gray-600 to-gray-700";
