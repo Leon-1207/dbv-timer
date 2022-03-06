@@ -3,10 +3,12 @@ module.exports = {
     extend: {
       colors: {
         "work": {
-          DEFAULT: "#DE781F"
+          DEFAULT: "#DE781F",
+          gradient: "#de981f"
         },
         "rest": {
-          DEFAULT: "#1F85DE"
+          DEFAULT: "#1F85DE",
+          gradient: "#1fa5de"
         },
         "theme": {
           DEFAULT: "#1F85DE",
