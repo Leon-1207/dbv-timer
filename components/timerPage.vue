@@ -3,129 +3,130 @@
     class="h-screen max-h-screen overflow-y-auto relative"
     :class="computedTimerLightBgClass"
   >
-    <div class="content-wrapper">
-      <!-- screen height wrapper in order to hide progress -->
-      <div class="min-h-screen pb-20">
-        <!-- box with timer and control buttons -->
-        <div class="timer-wrapper-box">
-          <div class="h-12 w-full"></div>
+    <div class="content-wrapper lg:contents">
+      <div class="pb-20 grid lg:grid-flow-col lg:max-w-6xl mx-auto">
+        <div class="contents lg:block">
+          <!-- box with timer and control buttons -->
+          <div class="timer-wrapper-box">
+            <div class="h-12 w-full"></div>
 
-          <!-- main progress indicator -->
-          <radial-progress-indicator
-            :interval-kind="currentIntervalKindValue || ''"
-            :interval-progress="currentIntervalProgress"
-            :training-progress="totalTrainingProgress"
-          >
-            <div class="grid gap-4">
-              <time-text
-                class="font-semibold text-6xl mx-auto"
-                :data="currentIntervalTimeLeftAsTimeObject"
-              />
-              <span class="mx-auto">{{ currentIntervalKindText }}</span>
-            </div>
-          </radial-progress-indicator>
+            <!-- main progress indicator -->
+            <radial-progress-indicator
+              :interval-kind="currentIntervalKindValue || ''"
+              :interval-progress="currentIntervalProgress"
+              :training-progress="totalTrainingProgress"
+            >
+              <div class="grid gap-4">
+                <time-text
+                  class="font-semibold text-6xl mx-auto"
+                  :data="currentIntervalTimeLeftAsTimeObject"
+                />
+                <span class="mx-auto">{{ currentIntervalKindText }}</span>
+              </div>
+            </radial-progress-indicator>
 
-          <!-- data -->
-          <div
-            class="
-              w-full
-              flex
-              justify-between
-              items-center
-              sm:text-lg
-              px-2
-              sm:px-8
-              pt-6
-              py-12
-              flex-wrap
-            "
-          >
-            <div class="whitespace-nowrap mr-2">
-              <span class="font-semibold">Verbleibende Zeit: </span>
-              <time-text :data="totalTimeLeftAsTimeObject" />
-            </div>
-            <div class="whitespace-nowrap">
-              <span class="font-semibold">Verbleibende Intervalle: </span>
-              <span>{{ remainingWorkSets }}</span>
-            </div>
-          </div>
-
-          <!-- control buttons -->
-          <div
-            class="
-              flex flex-nowrap
-              justify-around
-              items-center
-              max-w-xs
-              mx-auto
-            "
-          >
-            <!-- stop button -->
-            <button
-              class="circle-btn control-btn"
-              @click="
-                pauseTimer();
-                showExitTrainingDialog = true;
+            <!-- data -->
+            <div
+              class="
+                w-full
+                flex
+                justify-between
+                items-center
+                sm:text-lg
+                px-2
+                sm:px-8
+                pt-6
+                py-12
+                flex-wrap
               "
             >
-              <font-awesome-icon icon="stop" />
-            </button>
+              <div class="whitespace-nowrap mr-2">
+                <span class="font-semibold">Verbleibende Zeit: </span>
+                <time-text :data="totalTimeLeftAsTimeObject" />
+              </div>
+              <div class="whitespace-nowrap">
+                <span class="font-semibold">Verbleibende Intervalle: </span>
+                <span>{{ remainingWorkSets }}</span>
+              </div>
+            </div>
 
-            <!-- pause / resume button -->
-            <button
-              v-if="playing"
-              class="circle-btn control-btn-lg"
-              @click="pauseTimer"
+            <!-- control buttons -->
+            <div
+              class="
+                flex flex-nowrap
+                justify-around
+                items-center
+                max-w-xs
+                mx-auto
+              "
             >
-              <font-awesome-icon icon="pause" />
-            </button>
-            <button
-              v-else
-              class="circle-btn control-btn-lg"
-              @click="resumeTimer"
-            >
-              <font-awesome-icon icon="play" />
-            </button>
+              <!-- stop button -->
+              <button
+                class="circle-btn control-btn"
+                @click="
+                  pauseTimer();
+                  showExitTrainingDialog = true;
+                "
+              >
+                <font-awesome-icon icon="stop" />
+              </button>
 
-            <!-- skip button -->
-            <button class="circle-btn control-btn" @click="skipTimerStep">
-              <font-awesome-icon icon="forward-step" />
-            </button>
+              <!-- pause / resume button -->
+              <button
+                v-if="playing"
+                class="circle-btn control-btn-lg"
+                @click="pauseTimer"
+              >
+                <font-awesome-icon icon="pause" />
+              </button>
+              <button
+                v-else
+                class="circle-btn control-btn-lg"
+                @click="resumeTimer"
+              >
+                <font-awesome-icon icon="play" />
+              </button>
+
+              <!-- skip button -->
+              <button class="circle-btn control-btn" @click="skipTimerStep">
+                <font-awesome-icon icon="forward-step" />
+              </button>
+            </div>
           </div>
-        </div>
 
-        <!-- sticky timer box -->
-        <div
-          class="
-            z-10
-            timer-wrapper-box
-            sticky
-            top-2
-            sm:top-4
-            text-white text-xl
-            font-semibold
-            grid grid-cols-3
-          "
-          :class="computedTimerBgClass"
-        >
-          <span class="ml-2"> {{ currentIntervalKindText }}</span>
-          <time-text
-            class="mx-auto"
-            :data="currentIntervalTimeLeftAsTimeObject"
-          />
-          <div class="ml-auto text-white text-2xl mr-2">
-            <!-- pause / resume button -->
-            <button v-if="playing" @click="pauseTimer">
-              <font-awesome-icon icon="pause" />
-            </button>
-            <button v-else @click="resumeTimer">
-              <font-awesome-icon icon="play" />
-            </button>
+          <!-- sticky timer box -->
+          <div
+            class="
+              z-10
+              timer-wrapper-box
+              sticky
+              top-2
+              sm:top-4
+              text-white text-xl
+              font-semibold
+              grid grid-cols-3
+            "
+            :class="computedTimerBgClass"
+          >
+            <span class="ml-2"> {{ currentIntervalKindText }}</span>
+            <time-text
+              class="mx-auto"
+              :data="currentIntervalTimeLeftAsTimeObject"
+            />
+            <div class="ml-auto text-white text-2xl mr-2">
+              <!-- pause / resume button -->
+              <button v-if="playing" @click="pauseTimer">
+                <font-awesome-icon icon="pause" />
+              </button>
+              <button v-else @click="resumeTimer">
+                <font-awesome-icon icon="play" />
+              </button>
+            </div>
           </div>
         </div>
 
         <!-- box with timeline -->
-        <div class="mx-5">
+        <div class="mx-5 lg:mt-10">
           <timer-page-timeline
             v-if="showTimeline"
             :current-interval-index="currentIntervalIndex || 0"
@@ -141,7 +142,7 @@
 
           <button
             v-if="!showTimeline"
-            class="timeline-button hover-uplift"
+            class="timeline-button hover-uplift show-timeline-button"
             @click="showTimeline = true"
           >
             Timeline anzeigen
@@ -437,5 +438,8 @@ export default {
 
 .timeline-button {
   @apply text-main-text-color text-xl bg-white w-full py-2 rounded-full shadow-md mt-12;
+}
+.timeline-button.show-timeline-button {
+  @apply mt-0;
 }
 </style>
