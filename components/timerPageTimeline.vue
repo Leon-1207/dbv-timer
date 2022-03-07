@@ -30,12 +30,13 @@
         />
       </div>
 
-      <!-- progress -->
-      <div></div>
-
       <!-- progress bar -->
-      <div v-if="index === currentIntervalIndex">
-        {{ currentIntervalProgress }}
+      <div v-if="index === currentIntervalIndex" class="mt-5">
+        <div class="flex justify-between">
+          <time-text :data="currentIntervalRunningAsTimeObject" />
+          <time-text :data="currentIntervalTimeLeftAsTimeObject" />
+        </div>
+        <progress-bar :progress="currentIntervalProgress" />
       </div>
     </div>
 
@@ -48,10 +49,11 @@
 
 <script>
 import timeText from "./timeText.vue";
+import ProgressBar from "./progressBar.vue";
 import { convertSecondsToTimeObject } from "~/static/intervals";
 
 export default {
-  components: { timeText },
+  components: { timeText, ProgressBar },
   props: {
     intervals: {
       type: Array,
@@ -99,7 +101,7 @@ export default {
     currentIntervalRunningTimeInSeconds() {
       if (
         this.currentIntervalTimeLeftInSeconds === null ||
-        this.currentIntervalIndex ||
+        this.currentIntervalIndex === null ||
         this.currentIntervalIndex >= this.intervals.length
       )
         return 0;
@@ -113,6 +115,13 @@ export default {
         currentIntervalDuration - (this.currentIntervalTimeLeftInSeconds || 0)
       );
     },
+    currentIntervalRunningAsTimeObject() {
+      const seconds =
+        this.currentIntervalRunningTimeInSeconds === null
+          ? 0
+          : this.currentIntervalRunningTimeInSeconds;
+      return convertSecondsToTimeObject(seconds);
+    },
   },
 };
 </script>
@@ -121,6 +130,10 @@ export default {
 <style lang="postcss" scoped>
 .timeline-element {
   @apply py-4 px-4 shadow-md rounded-md bg-gradient-to-br from-white to-gray-100;
+}
+
+.timeline-element > * {
+  @apply mx-auto w-11/12;
 }
 
 .timeline-element.work,
@@ -144,15 +157,15 @@ export default {
 
 .timeline-element.start,
 .timeline-element.end {
-  @apply bg-gradient-to-tl from-theme to-theme-gradient border-none text-3xl text-center text-white font-semibold py-4;
+  @apply from-gray-500 to-gray-700 border-none text-3xl text-center text-white font-semibold py-4;
 }
 
 .timeline-element.start {
-  @apply rounded-b-none;
+  @apply rounded-b-none bg-gradient-to-br;
 }
 
 .timeline-element.end {
-  @apply rounded-t-none;
+  @apply rounded-t-none bg-gradient-to-tl;
 }
 
 .timeline-element.done {
