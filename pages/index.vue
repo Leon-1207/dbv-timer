@@ -459,8 +459,18 @@ export default {
 .time-input-wrapper {
   @apply relative;
 }
+
+.time-input-wrapper > *::-moz-selection,
+.time-input-wrapper > *::selection {
+  background: transparent !important;
+}
+.time-input-wrapper > input:focus::selection,
+.time-input-wrapper > input:focus::-moz-selection {
+  background: unset !important;
+}
+
 .time-input-wrapper > input {
-  @apply outline-none text-transparent w-8 select-none text-lg border-b-2 border-solid border-transparent text-center;
+  @apply outline-none text-transparent w-8 text-lg border-b-2 border-solid border-transparent text-center;
 }
 .time-input-wrapper > input:focus {
   @apply border-theme-light text-theme-light;
@@ -469,7 +479,7 @@ export default {
   @apply text-theme-light hidden;
 }
 .time-input-wrapper > span {
-  @apply absolute top-0 left-0 bottom-0 right-0 pointer-events-none z-10 text-main-text-color text-lg;
+  @apply absolute top-0 left-0 bottom-0 right-0 pointer-events-none z-10 text-main-text-color text-lg select-none;
 }
 .time-input-wrapper > input::-webkit-outer-spin-button,
 .time-input-wrapper > input::-webkit-inner-spin-button {
