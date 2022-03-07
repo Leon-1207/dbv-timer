@@ -97,6 +97,7 @@
         <!-- sticky timer box -->
         <div
           class="
+            z-10
             timer-wrapper-box
             sticky
             top-2
@@ -122,10 +123,22 @@
             </button>
           </div>
         </div>
-      </div>
 
-      <!-- box with timeline -->
-      <div class="timer-wrapper-box h-96">{{ intervals }}</div>
+        <!-- box with timeline -->
+        <div class="mx-5">
+          <timer-page-timeline
+            :current-interval-index="currentIntervalIndex || 0"
+            :current-interval-time-left-as-time-object="
+              currentIntervalTimeLeftAsTimeObject
+            "
+            :current-interval-time-left-in-seconds="
+              currentIntervalTimeLeftInSeconds || 0
+            "
+            :intervals="intervals"
+            :current-interval-progress="currentIntervalProgress"
+          />
+        </div>
+      </div>
     </div>
 
     <!-- dialog window -->
@@ -158,6 +171,7 @@
 
 <script>
 import timeText from "./timeText.vue";
+import TimerPageTimeline from "./timerPageTimeline.vue";
 import RadialProgressIndicator from "./radialProgressIndicator.vue";
 import {
   convertIntervalTimeToSeconds,
@@ -166,7 +180,7 @@ import {
 } from "~/static/intervals";
 
 export default {
-  components: { timeText, RadialProgressIndicator },
+  components: { timeText, RadialProgressIndicator, TimerPageTimeline },
 
   emits: ["exit-timer"],
 
@@ -175,7 +189,6 @@ export default {
       playing: false,
       currentTimeInSeconds: 0,
       showExitTrainingDialog: false,
-      isWorkInterval: false,
       intervals: [], // in form of [{kind: 'w', duration: 120}, {kind: 'r', duration: 15}]
       updateTickInterval: null,
     };
