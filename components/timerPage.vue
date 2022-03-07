@@ -127,6 +127,7 @@
         <!-- box with timeline -->
         <div class="mx-5">
           <timer-page-timeline
+            v-if="showTimeline"
             :current-interval-index="currentIntervalIndex || 0"
             :current-interval-time-left-as-time-object="
               currentIntervalTimeLeftAsTimeObject
@@ -137,6 +138,21 @@
             :intervals="intervals"
             :current-interval-progress="currentIntervalProgress"
           />
+
+          <button
+            v-if="!showTimeline"
+            class="timeline-button hover-uplift"
+            @click="showTimeline = true"
+          >
+            Timeline anzeigen
+          </button>
+          <button
+            v-else
+            class="timeline-button hover-uplift"
+            @click="showTimeline = false"
+          >
+            Timeline ausblenden
+          </button>
         </div>
       </div>
     </div>
@@ -191,6 +207,7 @@ export default {
       showExitTrainingDialog: false,
       intervals: [], // in form of [{kind: 'w', duration: 120}, {kind: 'r', duration: 15}]
       updateTickInterval: null,
+      showTimeline: false,
     };
   },
 
@@ -416,5 +433,9 @@ export default {
 
 .timer-wrapper-box {
   @apply bg-main-background rounded-xl py-8 px-4 my-10 mx-5 shadow-lg;
+}
+
+.timeline-button {
+  @apply text-main-text-color text-xl bg-white w-full py-2 rounded-full shadow-md mt-12;
 }
 </style>
