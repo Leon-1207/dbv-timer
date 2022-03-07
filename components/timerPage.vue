@@ -195,6 +195,7 @@ import {
   convertSecondsToTimeObject,
   shuffle,
 } from "~/static/intervals";
+const sound = require("@/static/beep.ogg").default;
 
 export default {
   components: { timeText, RadialProgressIndicator, TimerPageTimeline },
@@ -209,6 +210,7 @@ export default {
       intervals: [], // in form of [{kind: 'w', duration: 120}, {kind: 'r', duration: 15}]
       updateTickInterval: null,
       showTimeline: false,
+      sound, // same as "sound: sound"
     };
   },
 
@@ -333,10 +335,37 @@ export default {
     },
   },
 
+  watch: {
+    currentIntervalIndex() {
+      this.playDoubleSound();
+    },
+  },
+
+  created() {
+    const audio = new Audio(this.sound);
+
+    this.playSound = () => {
+      audio.playbackRate = 4;
+      audio.play();
+    };
+
+    this.playDoubleSound = () => {
+      audio.playbackRate = 2.2;
+      audio.play();
+      setTimeout(() => {
+        audio.play();
+      }, 700);
+    };
+  },
+
   methods: {
     updateTick() {
       if (!this.playing) return null; // is paused --> do not update
       this.currentTimeInSeconds += 1;
+
+      if ([2, 1, 0].includes(this.currentIntervalTimeLeftInSeconds)) {
+        this.playSound();
+      }
     },
     startTraining(intervals) {
       if (Array.isArray(intervals)) {
