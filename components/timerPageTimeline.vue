@@ -20,11 +20,13 @@
             :data="interval.durationAsTimeObject"
           />
         </div>
-        <span v-if="index === currentIntervalIndex" class="animate-pulse"
+        <span
+          v-if="index === currentIntervalIndex && !trainingCompleted"
+          class="animate-pulse"
           >JETZT</span
         >
         <font-awesome-icon
-          v-show="index < currentIntervalIndex"
+          v-show="index < currentIntervalIndex || trainingCompleted"
           class="text-xl"
           icon="check"
         />
@@ -80,6 +82,11 @@ export default {
     currentIntervalProgress: {
       type: Number,
       default: null,
+      required: true,
+    },
+    trainingCompleted: {
+      type: Boolean,
+      default: false,
       required: true,
     },
   },

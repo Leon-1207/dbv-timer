@@ -13,15 +13,19 @@
             <!-- main progress indicator -->
             <radial-progress-indicator
               :interval-kind="currentIntervalKindValue || ''"
-              :interval-progress="currentIntervalProgress"
-              :training-progress="totalTrainingProgress"
+              :interval-progress="
+                trainingCompleted ? 1 : currentIntervalProgress
+              "
+              :training-progress="trainingCompleted ? 1 : totalTrainingProgress"
             >
               <div class="grid gap-4">
                 <time-text
                   class="font-semibold text-6xl mx-auto"
                   :data="currentIntervalTimeLeftAsTimeObject"
                 />
-                <span class="mx-auto">{{ currentIntervalKindText }}</span>
+                <span class="mx-auto">{{
+                  trainingCompleted ? "ENDE" : currentIntervalKindText
+                }}</span>
               </div>
             </radial-progress-indicator>
 
@@ -75,6 +79,7 @@
               <button
                 v-if="playing"
                 class="circle-btn control-btn-lg"
+                :class="{ deactivated: trainingCompleted }"
                 @click="pauseTimer"
               >
                 <font-awesome-icon icon="pause" />
@@ -82,13 +87,18 @@
               <button
                 v-else
                 class="circle-btn control-btn-lg"
+                :class="{ deactivated: trainingCompleted }"
                 @click="resumeTimer"
               >
                 <font-awesome-icon icon="play" />
               </button>
 
               <!-- skip button -->
-              <button class="circle-btn control-btn" @click="skipTimerStep">
+              <button
+                class="circle-btn control-btn"
+                :class="{ deactivated: trainingCompleted }"
+                @click="skipTimerStep"
+              >
                 <font-awesome-icon icon="forward-step" />
               </button>
             </div>
@@ -115,10 +125,18 @@
             />
             <div class="ml-auto text-white text-2xl mr-2">
               <!-- pause / resume button -->
-              <button v-if="playing" @click="pauseTimer">
+              <button
+                v-if="playing"
+                :class="{ deactivated: trainingCompleted }"
+                @click="pauseTimer"
+              >
                 <font-awesome-icon icon="pause" />
               </button>
-              <button v-else @click="resumeTimer">
+              <button
+                v-else
+                :class="{ deactivated: trainingCompleted }"
+                @click="resumeTimer"
+              >
                 <font-awesome-icon icon="play" />
               </button>
             </div>
@@ -138,6 +156,7 @@
             "
             :intervals="intervals"
             :current-interval-progress="currentIntervalProgress"
+            :training-completed="trainingCompleted"
           />
 
           <button
@@ -215,6 +234,9 @@ export default {
   },
 
   computed: {
+    trainingCompleted() {
+      return this.totalTrainingDuration === this.currentTimeInSeconds;
+    },
     currentIntervalIndex() {
       if (Array.isArray(this.intervals) && this.intervals.length > 0) {
         let index = 0;
@@ -336,8 +358,11 @@ export default {
   },
 
   watch: {
-    currentIntervalIndex() {
-      this.playDoubleSound();
+    trainingCompleted() {
+      if (this.trainingCompleted) this.playing = false;
+    },
+    playing() {
+      if (this.trainingCompleted && this.playing) this.playing = false;
     },
   },
 
@@ -356,15 +381,35 @@ export default {
         audio.play();
       }, 700);
     };
+
+    this.playFinishSound = () => {
+      audio.playbackRate = 1.5;
+      audio.play();
+      const delay = 900;
+      setTimeout(() => {
+        audio.play();
+        setTimeout(() => {
+          audio.play();
+        }, delay);
+      }, delay);
+    };
   },
 
   methods: {
     updateTick() {
       if (!this.playing) return null; // is paused --> do not update
-      this.currentTimeInSeconds += 1;
+      this.currentTimeInSeconds = Math.min(
+        this.totalTrainingDuration || 0,
+        this.currentTimeInSeconds + 1
+      );
 
-      if ([3, 2, 1].includes(this.currentIntervalTimeLeftInSeconds)) {
+      if ([3, 2, 1].includes(this.currentIntervalTimeLeftInSeconds))
         this.playSound();
+      else if (this.currentIntervalTimeLeftInSeconds === 0) {
+        const wasLastInterval =
+          this.currentTimeInSeconds === this.totalTrainingDuration;
+        if (wasLastInterval) this.playFinishSound();
+        else this.playDoubleSound();
       }
     },
     startTraining(intervals) {
@@ -424,6 +469,7 @@ export default {
       setTimeout(() => {
         this.updateTickInterval = setInterval(this.updateTick, 1000);
       }, 1000);
+      this.playDoubleSound();
     },
     exitTimer() {
       this.showExitTrainingDialog = false;
@@ -442,6 +488,7 @@ export default {
       if (this.intervals.length > nextIntervalIndex) {
         const nextInterval = this.intervals[nextIntervalIndex];
         this.currentTimeInSeconds = nextInterval.startTime;
+        this.playDoubleSound();
       }
     },
   },
@@ -470,5 +517,9 @@ export default {
 }
 .timeline-button.show-timeline-button {
   @apply mt-0;
+}
+
+.deactivated {
+  @apply opacity-30 pointer-events-none;
 }
 </style>
