@@ -204,13 +204,7 @@ export default {
       showDeleteIntervalDialog: false,
       newInterval: null,
       newIntervalTime: 0,
-      intervals: [
-        {
-          workTime: { minutes: 0, seconds: 5 },
-          restTime: { minutes: 0, seconds: 10 },
-          repetitions: 1,
-        }
-      ],
+      intervals: [],
       editIntervalCopy: null,
       editIntervalIndex: null,
       deleteIntervalIndex: null,
