@@ -363,7 +363,7 @@ export default {
       if (!this.playing) return null; // is paused --> do not update
       this.currentTimeInSeconds += 1;
 
-      if ([2, 1, 0].includes(this.currentIntervalTimeLeftInSeconds)) {
+      if ([3, 2, 1].includes(this.currentIntervalTimeLeftInSeconds)) {
         this.playSound();
       }
     },
