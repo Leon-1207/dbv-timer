@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nuxt --hostname 0.0.0.0 --port 8000",
+    "dev": "nuxt",
+    "dev:host": "nuxt --hostname 0.0.0.0 --port 8000",
     "build": "nuxt build",
     "start": "nuxt start",
+    "start:host": "nuxt start --hostname 0.0.0.0 --port 8000",
     "deploy": "push-dir --dir=dist --branch=gh-pages --cleanup",
     "generate": "nuxt generate",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
