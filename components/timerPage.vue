@@ -230,7 +230,6 @@ export default {
       updateTickInterval: null,
       showTimeline: false,
       sound, // same as "sound: sound"
-      testAudio: null,
       snd: false,
     };
   },

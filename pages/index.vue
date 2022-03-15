@@ -15,7 +15,7 @@
     <timer-page
       v-show="!setupMode"
       ref="timerPage"
-      @exit-timer="setupMode = true"
+      @exit-timer="reloadPage"
       @new-load-sound-function="setLoadSoundFunction"
     />
 
@@ -233,6 +233,9 @@ export default {
   },
 
   methods: {
+    reloadPage() {
+      window.location.reload();
+    },
     openEditDialog(intervalIndex) {
       const interval = this.intervals[intervalIndex];
       this.newInterval = JSON.parse(JSON.stringify(interval));
