@@ -16,6 +16,7 @@
       v-show="!setupMode"
       ref="timerPage"
       @exit-timer="setupMode = true"
+      @new-load-sound-function="setLoadSoundFunction"
     />
 
     <!-- add interval -->
@@ -208,6 +209,7 @@ export default {
       editIntervalCopy: null,
       editIntervalIndex: null,
       deleteIntervalIndex: null,
+      loadSoundFunction: null,
     };
   },
 
@@ -354,6 +356,11 @@ export default {
       this.setupMode = false;
       const timerPageRef = this.$refs.timerPage;
       timerPageRef.startTraining(this.intervals);
+
+      if (this.loadSoundFunction) this.loadSoundFunction();
+    },
+    setLoadSoundFunction(newFunction) {
+      this.loadSoundFunction = newFunction;
     },
     updateUrlQuery() {
       // get data

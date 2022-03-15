@@ -3,15 +3,6 @@
     class="h-screen max-h-screen overflow-y-auto relative"
     :class="computedTimerLightBgClass"
   >
-    <!-- <button @click="testLoadAudio">load</button> -->
-    <button id="playButton" ref="playButton" @click="testLoadAudio">
-      play
-    </button>
-    <button @click="testMute">mute</button>
-    <button @click="testUnmute">unmute</button>
-    <span>{{ testAudio ? testAudio.src : "no audio" }}</span>
-    <!--<button @click="switchSound">switch sound</button>-->
-
     <div class="content-wrapper lg:contents">
       <div class="pb-20 grid lg:grid-flow-col lg:max-w-6xl mx-auto">
         <div class="contents lg:block">
@@ -228,7 +219,7 @@ const sound = require("@/static/beep.mp3").default;
 export default {
   components: { timeText, RadialProgressIndicator, TimerPageTimeline },
 
-  emits: ["exit-timer"],
+  emits: ["exit-timer", "new-load-sound-function"],
 
   data() {
     return {
@@ -377,6 +368,10 @@ export default {
     },
   },
 
+  mounted() {
+    this.$emit("new-load-sound-function", this.loadSnd);
+  },
+
   created() {
     const audio = new Audio();
     audio.autoplay = true;
@@ -384,8 +379,9 @@ export default {
       "data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
 
     this.playSound = () => {
-      audio.playbackRate = 4;
-      audio.play();
+      // audio.playbackRate = 4;
+      // audio.play();
+      this.playSoundFunction(500);
     };
 
     this.playDoubleSound = () => {
@@ -410,19 +406,25 @@ export default {
   },
 
   methods: {
-    testMute() {
+    muteSnd() {
       if (this.snd) this.snd.muted = true;
     },
-    testUnmute() {
+    unmuteSnd() {
       if (this.snd) this.snd.muted = false;
     },
-    testLoadAudio() {
-      // this.testAudio = new Audio(this.sound);
+    playSoundFunction(duration) {
+      if (this.snd) {
+        this.unmuteSnd();
+        setTimeout(this.muteSnd, duration);
+      }
+    },
+    loadSnd() {
       this.snd = false;
       const thisRef = this;
       function playAudioOfSources(src) {
         if (!thisRef.snd) thisRef.snd = new Audio();
-        thisRef.snd.loop = true
+        thisRef.snd.loop = true;
+        thisRef.snd.muted = true;
         // else thisRef.snd = null; // $(snd).empty();
 
         for (let i = 0; i < src.length; i++) {
@@ -447,11 +449,6 @@ export default {
       };
 
       playAudio();
-    },
-    testPlayAudio() {
-      setInterval(() => {
-        this.testLoadAudio();
-      }, 4000);
     },
     updateTick() {
       if (!this.playing) return null; // is paused --> do not update
