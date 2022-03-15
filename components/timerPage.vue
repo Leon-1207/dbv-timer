@@ -373,35 +373,27 @@ export default {
   },
 
   created() {
-    const audio = new Audio();
-    audio.autoplay = true;
-    audio.src =
-      "data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
+    const playSoundSequence = (duration, delay, count) => {
+      if (count > 0) {
+        this.playSoundFunction(duration);
+        if (count - 1 > 0) {
+          setTimeout(() => {
+            playSoundSequence(duration, delay, count - 1);
+          }, delay + duration);
+        }
+      }
+    };
 
     this.playSound = () => {
-      // audio.playbackRate = 4;
-      // audio.play();
       this.playSoundFunction(500);
     };
 
     this.playDoubleSound = () => {
-      audio.playbackRate = 2.2;
-      audio.play();
-      setTimeout(() => {
-        audio.play();
-      }, 700);
+      playSoundSequence(400, 300, 2);
     };
 
     this.playFinishSound = () => {
-      audio.playbackRate = 1.5;
-      audio.play();
-      const delay = 900;
-      setTimeout(() => {
-        audio.play();
-        setTimeout(() => {
-          audio.play();
-        }, delay);
-      }, delay);
+      playSoundSequence(600, 300, 3);
     };
   },
 
@@ -441,9 +433,9 @@ export default {
       const playAudio = function () {
         const src = [
           {
-            src: "http://192.168.178.24:8000/dbv-timer/_nuxt/static/beep.mp3",
+            src: thisRef.sound,
             type: "audio/mp3",
-          },
+          }
         ];
         playAudioOfSources(src);
       };
