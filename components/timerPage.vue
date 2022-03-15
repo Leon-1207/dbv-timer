@@ -405,7 +405,6 @@ export default {
     },
     playSoundFunction(duration) {
       if (this.snd) {
-        this.snd.currentTime = 0;
         this.unmuteSnd();
         setTimeout(this.muteSnd, duration);
       }
@@ -435,7 +434,7 @@ export default {
           {
             src: thisRef.sound,
             type: "audio/mp3",
-          },
+          }
         ];
         playAudioOfSources(src);
       };
