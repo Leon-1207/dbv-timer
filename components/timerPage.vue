@@ -3,6 +3,7 @@
     class="h-screen max-h-screen overflow-y-auto relative"
     :class="computedTimerLightBgClass"
   >
+    <audio :src="sound" controls preload="auto" />
     <div class="content-wrapper lg:contents">
       <div class="pb-20 grid lg:grid-flow-col lg:max-w-6xl mx-auto">
         <div class="contents lg:block">
@@ -367,7 +368,13 @@ export default {
   },
 
   created() {
-    const audio = new Audio(this.sound);
+    const audio = new Audio();
+    audio.autoplay = true;
+    audio.src =
+      "data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
+    setTimeout(() => {
+      audio.src = this.sound;
+    }, 1000);
 
     this.playSound = () => {
       audio.playbackRate = 4;
