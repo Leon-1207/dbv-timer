@@ -384,15 +384,18 @@ export default {
     };
 
     this.playSound = () => {
-      this.playSoundFunction(500);
+      if (this.snd) this.snd.playbackRate = 1;
+      this.playSoundFunction(100);
     };
 
     this.playDoubleSound = () => {
+      if (this.snd) this.snd.playbackRate = 0.1;
       playSoundSequence(400, 300, 2);
     };
 
     this.playFinishSound = () => {
-      playSoundSequence(600, 300, 3);
+      if (this.snd) this.snd.playbackRate = 1;
+      playSoundSequence(900, 300, 3);
     };
   },
 
@@ -434,7 +437,7 @@ export default {
           {
             src: thisRef.sound,
             type: "audio/mp3",
-          }
+          },
         ];
         playAudioOfSources(src);
       };
